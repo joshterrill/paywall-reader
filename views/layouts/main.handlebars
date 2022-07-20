@@ -1,0 +1,65 @@
+﻿<!doctype html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <style>
+        main {
+            margin-bottom: 56px;
+        }
+
+        .container {
+            width: auto;
+            max-width: 1200px;
+            padding: 0 15px;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .text-white {
+            color: #fff;
+        }
+
+        .text-dark {
+            color: #212529;
+        }
+
+        a {
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .source-badge {
+            font-size: 0.8rem;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column h-100">
+
+    <!-- Begin page content -->
+    <main class="flex-shrink-0">
+        <div class="container">
+            <a class="text-dark" href="/"><h1 class="mt-5">Paywall Reader</h1></a>
+            {{{body}}}
+        </div>
+    </main>
+
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container">
+            <span class="text-muted">No copyright <span id="year"></span></span>
+        </div>
+    </footer>
+
+
+    <script>
+        document.getElementById('year').innerText = new Date().getFullYear();
+    </script>
+</body>
+
+</html>
