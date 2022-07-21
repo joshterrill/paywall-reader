@@ -2,8 +2,7 @@
     "nyt": {"name": "New York Times", "url": "nytimes.com"},
     "nytcooking": {"name": "New York Times Cooking", "url": "cooking.nytimes.com"},
     "newyorker": {"name": "The New Yorker", "url": "newyorker.com"},
-    "cnn": {"name": "CNN", "url": "cnn.com"},
-    "wsj": {"name": "Wall Street Journal", "url": "wsj.com"},
-    "wapo": {"name": "Washington Post", "url": "washingtonpost.com"},
+    "economist": {"name": "The Economist", "url": "economist.com"},
+    "washingtonpost": {"name": "Washington Post", "url": "washingtonpost.com"},
     "vogue": {"name": "Vogue", "url": "vogue.com"}
 }

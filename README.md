@@ -6,12 +6,12 @@ A web app that lets you read articles on popular news sites that get hidden behi
 * New York Times (nytimes.com)
 * New York Times Cooking (cooking.nytimes.com)
 * The New Yorker (newyorker.com)
-
-### Sites Coming Soon
-* CNN (cnn.com)
-* Wall Street Journal (wsj.com)
+* The Economist (economiste.com)
 * Washington Post (washingtonpost.com)
 * Vogue (vogue.com)
+
+### Unsupported Sites
+* Wall Street Journal (wsj.com)
 
 ### Installation
 
@@ -26,7 +26,7 @@ Running `npm test` will check all supported sites for output verification, makin
 
 ### Adding More Sites
 
-Pull requests would gladly be accepted for adding support for more sites. If you can't submit a pull request, open a [Github issue](https://github.com/joshterrill/paywall-reader/issues) and I'll get to it when I have time.
+Pull requests would gladly be accepted for adding support for more sites (as long as they are not sites already listed in the **Unsupported Sites** section). If you can't submit a pull request, open a [Github issue](https://github.com/joshterrill/paywall-reader/issues) and I'll get to it when I have time.
 
 ### Todo
 * Fix relative links in embedded html to point to domain they should be coming from
