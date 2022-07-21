@@ -20,6 +20,7 @@ URL: https://reader.dangerous.dev
 ```bash
 git clone https://github.com/joshterrill/paywall-reader
 cd paywall-reader/
+cp .env.example .env
 npm i
 npm start
 ```
@@ -33,3 +34,4 @@ Pull requests would gladly be accepted for adding support for more sites (as lon
 ### Todo
 * Fix relative and absolute links in embedded html to point to domain they should be coming from
 * Add dom sanitization for incoming HTML
+* Add checks for source and URL fields on requests to ensure the URL matches the URL in the `news-source-map.json` file
