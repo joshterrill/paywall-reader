@@ -1,0 +1,41 @@
+﻿main {
+    margin-bottom: 56px;
+}
+
+.container {
+    width: auto;
+    max-width: 1200px;
+    padding: 0 15px;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.text-white {
+    color: #fff;
+}
+
+.text-dark {
+    color: #212529;
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.source-badge {
+    font-size: 0.8rem;
+    vertical-align: middle;
+}
+
+.article-text-container img {
+    width: -webkit-fill-available;
+}
+
+footer .container div:last-child {
+    margin-left: auto;
+}
