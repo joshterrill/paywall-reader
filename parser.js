@@ -96,13 +96,29 @@ async function latimes(url) {
     return { articleText, articleHeadline };
 }
 
-
 async function theAthletic(url) {
     const rawHtml = await fetch(url);
     const html = await rawHtml.text();
     const $ = cheerio.load(html);
     const articleHeadline = $('title').first().text().replace('- The Athletic', '');
     const articleHtml = $('.article-content-container').html();
+    const articleText = articleHtml;
+    return { articleText, articleHeadline };
+}
+
+async function businessInsider(url) {
+    const rawHtml = await fetch(url);
+    const html = await rawHtml.text();
+    const $ = cheerio.load(html);
+    const articleHeadline = $('title').first().text();
+    $('.content-lock-content img.lazy-image').get().forEach(i => {
+        const image = $(i);
+        image.parent('.lazy-holder').removeAttr('style');
+        const imageJson = JSON.parse(image.attr('data-srcs'));
+        const rootUrl = Object.keys(imageJson)[0];
+        image.parent().html(`<img src="${decodeURIComponent(rootUrl)}" />`);
+    });
+    const articleHtml = $('.content-lock-content').html();
     const articleText = articleHtml;
     return { articleText, articleHeadline };
 }
@@ -163,6 +179,11 @@ async function getContent(source, url, direct) {
             const theAthleticRes = await theAthletic(url);
             articleText = theAthleticRes.articleText;
             articleHeadline = theAthleticRes.articleHeadline;
+            break;
+        case 'businessinsider':
+            const businessInsiderRes = await businessInsider(url);
+            articleText = businessInsiderRes.articleText;
+            articleHeadline = businessInsiderRes.articleHeadline;
             break;
         case 'vogue':
             const vogueRes = await vogue(url);

@@ -10,6 +10,9 @@ URL: https://reader.dangerous.dev
 * The New Yorker (newyorker.com)
 * The Economist (economiste.com)
 * Washington Post (washingtonpost.com)
+* LA Times (latimes.com)
+* The Athletic (theathletic.com)
+* Business Insider (businessinsider.com)
 * Vogue (vogue.com)
 
 ### Unsupported Sites

@@ -5,6 +5,7 @@
     "economist": {"name": "The Economist", "url": "economist.com"},
     "washingtonpost": {"name": "Washington Post", "url": "washingtonpost.com"},
     "latimes": {"name": "LA Times", "url": "latimes.com", "direct": true},
-    "theathletic": {"name": "The Athletic", "url": "theathletic", "direct": true},
+    "theathletic": {"name": "The Athletic", "url": "theathletic.com", "direct": true},
+    "businessinsider": {"name": "Business Insider", "url": "businessinsider.com"},
     "vogue": {"name": "Vogue", "url": "vogue.com"}
 }
