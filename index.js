@@ -21,10 +21,11 @@ app.get('/', (req, res) => {
 
 app.get('/article', (req, res) => {
     const { source } = req.query;
-    if (!newsSourceMapping[source]) {
+    const sourceText = newsSourceMapping[source];
+    if (!sourceText || !sourceText.name) {
         res.render('404');
     }
-    res.render('article', {source, sourceText: newsSourceMapping[source].name});
+    res.render('article', {source, sourceText: sourceText.name});
 });
 
 app.get('/read', async (req, res) => {
@@ -33,7 +34,8 @@ app.get('/read', async (req, res) => {
         if (!source || !url) {
             throw new Error('Source or URL not provided');
         }
-        const { articleText, articleHeadline } = await parse.getContent(source, url);
+        const direct = newsSourceMapping[source].direct;
+        const { articleText, articleHeadline } = await parse.getContent(source, url, direct);
         res.render('read', {source, sourceText: newsSourceMapping[source].name, articleText, articleHeadline});
     } catch (error) {
         console.log(error);

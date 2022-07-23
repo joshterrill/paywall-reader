@@ -4,5 +4,7 @@
     "newyorker": {"name": "The New Yorker", "url": "newyorker.com"},
     "economist": {"name": "The Economist", "url": "economist.com"},
     "washingtonpost": {"name": "Washington Post", "url": "washingtonpost.com"},
+    "latimes": {"name": "LA Times", "url": "latimes.com", "direct": true},
+    "theathletic": {"name": "The Athletic", "url": "theathletic", "direct": true},
     "vogue": {"name": "Vogue", "url": "vogue.com"}
 }

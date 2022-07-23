@@ -81,6 +81,32 @@ async function washingtonPost(url) {
     return { articleText, articleHeadline };
 }
 
+async function latimes(url) {
+    const rawHtml = await fetch(url);
+    const html = await rawHtml.text();
+    const $ = cheerio.load(html);
+    const articleHeadline = $('title').first().text().replace('- Los Angeles Times', '');
+    $('.rich-text-article-body-content img').get().forEach(i => {
+        const image = $(i);
+        const rootUrl = image.attr('data-src').split('?url=')[1];
+        image.parent().html(`<img src="${decodeURIComponent(rootUrl)}" />`);
+    });
+    const articleHtml = $('.rich-text-article-body-content').html();
+    const articleText = articleHtml;
+    return { articleText, articleHeadline };
+}
+
+
+async function theAthletic(url) {
+    const rawHtml = await fetch(url);
+    const html = await rawHtml.text();
+    const $ = cheerio.load(html);
+    const articleHeadline = $('title').first().text().replace('- The Athletic', '');
+    const articleHtml = $('.article-content-container').html();
+    const articleText = articleHtml;
+    return { articleText, articleHeadline };
+}
+
 async function vogue(url) {
     const rawHtml = await fetch(url);
     const html = await rawHtml.text();
@@ -96,38 +122,50 @@ async function vogue(url) {
     return { articleText, articleHeadline };
 }
 
-async function getContent(source, url) {
+async function getContent(source, url, direct) {
     let articleText = null;
     let articleHeadline = null;
-    const archiveUrl = await checkUrl(url);
+    if (!direct) {
+        url = await checkUrl(url);
+    }
     switch(source) {
         case 'nyt':
-            const nytRes = await nyt(archiveUrl);
+            const nytRes = await nyt(url);
             articleText = nytRes.articleText;
             articleHeadline = nytRes.articleHeadline;
             break;
         case 'nytcooking':
-            const nytCookingRes = await nytCooking(archiveUrl);
+            const nytCookingRes = await nytCooking(url);
             articleText = nytCookingRes.articleText;
             articleHeadline = nytCookingRes.articleHeadline;
             break;
         case 'newyorker':
-            const newyorkerRes = await newyorker(archiveUrl);
+            const newyorkerRes = await newyorker(url);
             articleText = newyorkerRes.articleText;
             articleHeadline = newyorkerRes.articleHeadline;
             break;
         case 'economist':
-            const economistRes = await economist(archiveUrl);
+            const economistRes = await economist(url);
             articleText = economistRes.articleText;
             articleHeadline = economistRes.articleHeadline;
             break;
         case 'washingtonpost':
-            const washingtonPostRes = await washingtonPost(archiveUrl);
+            const washingtonPostRes = await washingtonPost(url);
             articleText = washingtonPostRes.articleText;
             articleHeadline = washingtonPostRes.articleHeadline;
             break;
+        case 'latimes':
+            const laTimesRes = await latimes(url);
+            articleText = laTimesRes.articleText;
+            articleHeadline = laTimesRes.articleHeadline;
+            break;
+        case 'theathletic':
+            const theAthleticRes = await theAthletic(url);
+            articleText = theAthleticRes.articleText;
+            articleHeadline = theAthleticRes.articleHeadline;
+            break;
         case 'vogue':
-            const vogueRes = await vogue(archiveUrl);
+            const vogueRes = await vogue(url);
             articleText = vogueRes.articleText;
             articleHeadline = vogueRes.articleHeadline;
             break;
