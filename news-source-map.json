@@ -1,11 +1,12 @@
 ﻿{
-    "nyt": {"name": "New York Times", "url": "nytimes.com"},
-    "nytcooking": {"name": "New York Times Cooking", "url": "cooking.nytimes.com"},
-    "newyorker": {"name": "The New Yorker", "url": "newyorker.com"},
-    "economist": {"name": "The Economist", "url": "economist.com"},
-    "washingtonpost": {"name": "Washington Post", "url": "washingtonpost.com"},
-    "latimes": {"name": "LA Times", "url": "latimes.com", "direct": true},
-    "theathletic": {"name": "The Athletic", "url": "theathletic.com", "direct": true},
-    "businessinsider": {"name": "Business Insider", "url": "businessinsider.com"},
-    "vogue": {"name": "Vogue", "url": "vogue.com"}
+    "nytimes.com": {"name": "New York Times", "method": "ARCHIVE"},
+    "cooking.nytimes.com": {"name": "New York Times Cooking", "method": "ARCHIVE"},
+    "newyorker.com": {"name": "The New Yorker", "method": "ARCHIVE"},
+    "economist.com": {"name": "The Economist", "method": "ARCHIVE"},
+    "washingtonpost.com": {"name": "Washington Post", "method": "ARCHIVE"},
+    "latimes.com": {"name": "LA Times", "method": "DIRECT"},
+    "theathletic.com": {"name": "The Athletic", "method": "DIRECT"},
+    "businessinsider.com": {"name": "Business Insider", "method": "ARCHIVE"},
+    "bloomberg.com": {"name": "Bloomberg", "method": "GOOGLE"},
+    "vogue.com": {"name": "Vogue", "method": "ARCHIVE"}
 }

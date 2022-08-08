@@ -13,10 +13,19 @@ URL: https://reader.dangerous.dev
 * LA Times (latimes.com)
 * The Athletic (theathletic.com)
 * Business Insider (businessinsider.com)
+* Bloomberg (bloomberg.com)
 * Vogue (vogue.com)
 
-### Unsupported Sites
-* Wall Street Journal (wsj.com)
+### Prerequisites
+
+1. Register a custom Google search engine by going to https://developers.google.com/custom-search/v1/introduction and pressing "Get A Key"
+2. As per their site:
+
+>Once it is created, you can find the engine's ID in the Setup > Basics > Search Engine ID section of the Control Panel
+
+This is where you will configure what sites your search will search in. For the purposes of this app in its current state, we will just use bloomberg.com
+
+Take note of your API key and Search Engine ID.
 
 ### Installation
 
@@ -24,6 +33,7 @@ URL: https://reader.dangerous.dev
 git clone https://github.com/joshterrill/paywall-reader
 cd paywall-reader/
 cp .env.example .env
+# replace GOOGLE_API_KEY and GOOGLE_SEARCH_ID with values from prerequisites section
 npm i
 npm start
 ```

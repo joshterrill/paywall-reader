@@ -6,7 +6,7 @@ function sanitizeUrl(url) {
     return url.split('?')[0];
 }
 
-async function checkUrl(url) {
+async function checkUrlArchive(url) {
     url = sanitizeUrl(url);
     const data = await fetch(`https://archive.org/wayback/available?url=${url}`);
     if (!data) {
@@ -17,6 +17,19 @@ async function checkUrl(url) {
         throw new Error('Checked URL but no snapshot available');
     }
     return json.archived_snapshots.closest.url;
+}
+
+async function checkUrlGoogle(url, site) {
+    url = sanitizeUrl(url);
+    const searchTerm = url.split('/')[url.split('/').length - 1];
+    const res = await fetch(`https://content-customsearch.googleapis.com/customsearch/v1?cx=${process.env.GOOGLE_SEARCH_ID}&key=${process.env.GOOGLE_SEARCH_KEY}&q=${searchTerm}`)
+    const json = await res.json();
+    if (!json?.items?.length) {
+        throw new Error('Unable to get result from search engine');
+    }
+    const { cacheId } = json.items[0];
+    const webCacheUrl = `http://webcache.googleusercontent.com/search?q=cache:${cacheId}:${site}`;
+    return webCacheUrl;
 }
 
 async function nyt(url) {
@@ -41,10 +54,10 @@ async function newyorker(url) {
     const rawHtml = await fetch(url);
     const html = await rawHtml.text();
     const $ = cheerio.load(html);
-    const scriptTag = $('script[type="application/ld+json"]').text().split(',\'keywords\':');
-    const badJsonFixer = JSON.parse(`${scriptTag[0]}}`); // wtf
-    const articleText = marked.parse(badJsonFixer.articleBody);
-    const articleHeadline = badJsonFixer.headline;
+    const scriptTag = $('script[type="application/ld+json"]').first().text().split(',\'keywords\':');
+    const json = JSON.parse(scriptTag[0]);;
+    const articleText = marked.parse(json.articleBody);
+    const articleHeadline = json.headline;
     return { articleText, articleHeadline };
 }
 
@@ -118,8 +131,20 @@ async function businessInsider(url) {
         const rootUrl = Object.keys(imageJson)[0];
         image.parent().html(`<img src="${decodeURIComponent(rootUrl)}" />`);
     });
+    $('.inline-newsletter-signup').remove();
     const articleHtml = $('.content-lock-content').html();
     const articleText = articleHtml;
+    return { articleText, articleHeadline };
+}
+
+async function bloomberg(url) {
+    const rawHtml = await fetch(url);
+    const html = await rawHtml.text();
+    const $ = cheerio.load(html);
+    const scriptTag = $('script[data-component-props="ArticleBody"]').text();
+    const json = JSON.parse(scriptTag);
+    const articleText = json.story.body.replace(/60x-1/g, '1200x-1'); // replace low res images with higher res
+    const articleHeadline = json.story.seoHeadline;
     return { articleText, articleHeadline };
 }
 
@@ -138,59 +163,70 @@ async function vogue(url) {
     return { articleText, articleHeadline };
 }
 
-async function getContent(source, url, direct) {
+async function getContent(source, url, method) {
+    console.log(source, url, method);
     let articleText = null;
     let articleHeadline = null;
-    if (!direct) {
-        url = await checkUrl(url);
+    if (method === 'ARCHIVE') {
+        url = await checkUrlArchive(url);
+    } else if (method === 'GOOGLE') {
+        url = await checkUrlGoogle(url, source);
     }
+    console.log(url);
     switch(source) {
-        case 'nyt':
+        case 'nytimes.com':
             const nytRes = await nyt(url);
             articleText = nytRes.articleText;
             articleHeadline = nytRes.articleHeadline;
             break;
-        case 'nytcooking':
+        case 'cooking.nytimes.com':
             const nytCookingRes = await nytCooking(url);
             articleText = nytCookingRes.articleText;
             articleHeadline = nytCookingRes.articleHeadline;
             break;
-        case 'newyorker':
+        case 'newyorker.com':
             const newyorkerRes = await newyorker(url);
             articleText = newyorkerRes.articleText;
             articleHeadline = newyorkerRes.articleHeadline;
             break;
-        case 'economist':
+        case 'economist.com':
             const economistRes = await economist(url);
             articleText = economistRes.articleText;
             articleHeadline = economistRes.articleHeadline;
             break;
-        case 'washingtonpost':
+        case 'washingtonpost.com':
             const washingtonPostRes = await washingtonPost(url);
             articleText = washingtonPostRes.articleText;
             articleHeadline = washingtonPostRes.articleHeadline;
             break;
-        case 'latimes':
+        case 'latimes.com':
             const laTimesRes = await latimes(url);
             articleText = laTimesRes.articleText;
             articleHeadline = laTimesRes.articleHeadline;
             break;
-        case 'theathletic':
+        case 'theathletic.com':
             const theAthleticRes = await theAthletic(url);
             articleText = theAthleticRes.articleText;
             articleHeadline = theAthleticRes.articleHeadline;
             break;
-        case 'businessinsider':
+        case 'businessinsider.com':
             const businessInsiderRes = await businessInsider(url);
             articleText = businessInsiderRes.articleText;
             articleHeadline = businessInsiderRes.articleHeadline;
             break;
-        case 'vogue':
+        case 'bloomberg.com':
+            const bloombergRes = await bloomberg(url);
+            articleText = bloombergRes.articleText;
+            articleHeadline = bloombergRes.articleHeadline;
+            break;
+        case 'vogue.com':
             const vogueRes = await vogue(url);
             articleText = vogueRes.articleText;
             articleHeadline = vogueRes.articleHeadline;
             break;
-        
+        default:
+            articleText = 'No article found';
+            articleHeadline = '404';
     }
     return {articleText, articleHeadline};
 }

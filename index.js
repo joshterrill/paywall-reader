@@ -34,8 +34,8 @@ app.get('/read', async (req, res) => {
         if (!source || !url) {
             throw new Error('Source or URL not provided');
         }
-        const direct = newsSourceMapping[source].direct;
-        const { articleText, articleHeadline } = await parse.getContent(source, url, direct);
+        const sourceMapping = newsSourceMapping[source];
+        const { articleText, articleHeadline } = await parse.getContent(source, url, sourceMapping.method);
         res.render('read', {source, sourceText: newsSourceMapping[source].name, articleText, articleHeadline});
     } catch (error) {
         console.log(error);
