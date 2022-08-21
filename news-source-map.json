@@ -1,7 +1,7 @@
 ﻿{
     "nytimes.com": {"name": "New York Times", "method": "ARCHIVE"},
     "cooking.nytimes.com": {"name": "New York Times Cooking", "method": "ARCHIVE"},
-    "newyorker.com": {"name": "The New Yorker", "method": "ARCHIVE"},
+    "newyorker.com": {"name": "The New Yorker", "method": "GOOGLE"},
     "economist.com": {"name": "The Economist", "method": "ARCHIVE"},
     "washingtonpost.com": {"name": "Washington Post", "method": "ARCHIVE"},
     "latimes.com": {"name": "LA Times", "method": "DIRECT"},

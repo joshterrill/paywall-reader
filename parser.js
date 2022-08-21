@@ -27,8 +27,10 @@ async function checkUrlGoogle(url, site) {
     if (!json?.items?.length) {
         throw new Error('Unable to get result from search engine');
     }
+    console.log(json);
     const { cacheId } = json.items[0];
     const webCacheUrl = `http://webcache.googleusercontent.com/search?q=cache:${cacheId}:${site}`;
+    console.log(webCacheUrl);
     return webCacheUrl;
 }
 
@@ -56,7 +58,7 @@ async function newyorker(url) {
     const $ = cheerio.load(html);
     const scriptTag = $('script[type="application/ld+json"]').first().text().split(',\'keywords\':');
     const json = JSON.parse(scriptTag[0]);;
-    const articleText = marked.parse(json.articleBody);
+    const articleText = $('#articleBody').html();
     const articleHeadline = json.headline;
     return { articleText, articleHeadline };
 }

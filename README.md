@@ -23,7 +23,7 @@ URL: https://reader.dangerous.dev
 
 >Once it is created, you can find the engine's ID in the Setup > Basics > Search Engine ID section of the Control Panel
 
-This is where you will configure what sites your search will search in. For the purposes of this app in its current state, we will just use bloomberg.com
+This is where you will configure what sites your search will search in. For the purposes of this app in its current state, we will just use bloomberg.com (`*.bloomberg.com/*`) and newyorker.com (`*.newyorker.com/*`)
 
 Take note of your API key and Search Engine ID.
 
