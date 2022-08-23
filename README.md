@@ -15,6 +15,7 @@ URL: https://reader.dangerous.dev
 * Business Insider (businessinsider.com)
 * Bloomberg (bloomberg.com)
 * Vogue (vogue.com)
+* The Atlantic (theatlantic.com)
 
 ### Prerequisites
 

@@ -8,5 +8,6 @@
     "theathletic.com": {"name": "The Athletic", "method": "DIRECT"},
     "businessinsider.com": {"name": "Business Insider", "method": "ARCHIVE"},
     "bloomberg.com": {"name": "Bloomberg", "method": "GOOGLE"},
-    "vogue.com": {"name": "Vogue", "method": "ARCHIVE"}
+    "vogue.com": {"name": "Vogue", "method": "ARCHIVE"},
+    "theatlantic.com": {"name": "The Atlantic", "method": "ARCHIVE"}
 }

@@ -165,6 +165,15 @@ async function vogue(url) {
     return { articleText, articleHeadline };
 }
 
+async function atlantic(url) {
+    const rawHtml = await fetch(url);
+    const html = await rawHtml.text();
+    const $ = cheerio.load(html);
+    const articleHeadline = $('title').first().text().replace(' - The Atlantic', '');
+    let articleText = $("[class^='ArticleBody_root']").html();
+    return { articleText, articleHeadline };
+}
+
 async function getContent(source, url, method) {
     console.log(source, url, method);
     let articleText = null;
@@ -225,6 +234,11 @@ async function getContent(source, url, method) {
             const vogueRes = await vogue(url);
             articleText = vogueRes.articleText;
             articleHeadline = vogueRes.articleHeadline;
+            break;
+        case 'theatlantic.com':
+            const atlanticRes = await atlantic(url);
+            articleText = atlanticRes.articleText;
+            articleHeadline = atlanticRes.articleHeadline;
             break;
         default:
             articleText = 'No article found';
