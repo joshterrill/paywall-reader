@@ -16,6 +16,7 @@ URL: https://reader.dangerous.dev
 * Bloomberg (bloomberg.com)
 * Vogue (vogue.com)
 * The Atlantic (theatlantic.com)
+* Forbes (forbes.com)
 
 ### Prerequisites
 
