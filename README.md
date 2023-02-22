@@ -43,7 +43,7 @@ Running `npm test` will check all supported sites for output verification, makin
 
 ### Adding More Sites
 
-Pull requests would gladly be accepted for adding support for more sites (as long as they are not sites already listed in the **Unsupported Sites** section). If you can't submit a pull request, open a [Github issue](https://github.com/joshterrill/paywall-reader/issues) and I'll get to it when I have time.
+Pull requests would gladly be accepted for adding support for more sites. If you can't submit a pull request, open a [Github issue](https://github.com/joshterrill/paywall-reader/issues) and I'll get to it when I have time.
 
 ### Todo
 * Fix relative and absolute links in embedded html to point to domain they should be coming from
