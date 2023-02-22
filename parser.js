@@ -27,10 +27,8 @@ async function checkUrlGoogle(url, site) {
     if (!json?.items?.length) {
         throw new Error('Unable to get result from search engine');
     }
-    console.log(json);
     const { cacheId } = json.items[0];
     const webCacheUrl = `http://webcache.googleusercontent.com/search?q=cache:${cacheId}:${site}`;
-    console.log(webCacheUrl);
     return webCacheUrl;
 }
 
@@ -174,6 +172,23 @@ async function atlantic(url) {
     return { articleText, articleHeadline };
 }
 
+async function forbes(url) {
+    const rawHtml = await fetch(url);
+    const html = await rawHtml.text();
+    const $ = cheerio.load(html);
+    const articleHeadline = $('title').first().text().replace(' - Forbes', '');
+    $('.article-body-image').removeAttr('style');
+    $('.article-sharing').remove();
+    $('progressive-image').get().forEach(i => {
+        const image = $(i);
+        const rootUrl = image.attr('src');
+        image.html(`<img src="${rootUrl}" />`);
+    });
+    let articleText = $('.article-body').html();
+
+    return { articleText, articleHeadline };
+}
+
 async function getContent(source, url, method) {
     console.log(source, url, method);
     let articleText = null;
@@ -183,7 +198,6 @@ async function getContent(source, url, method) {
     } else if (method === 'GOOGLE') {
         url = await checkUrlGoogle(url, source);
     }
-    console.log(url);
     switch(source) {
         case 'nytimes.com':
             const nytRes = await nyt(url);
@@ -239,6 +253,11 @@ async function getContent(source, url, method) {
             const atlanticRes = await atlantic(url);
             articleText = atlanticRes.articleText;
             articleHeadline = atlanticRes.articleHeadline;
+            break;
+        case 'forbes.com':
+            const forbesRes = await forbes(url);
+            articleText = forbesRes.articleText;
+            articleHeadline = forbesRes.articleHeadline;
             break;
         default:
             articleText = 'No article found';
