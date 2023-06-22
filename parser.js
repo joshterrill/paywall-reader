@@ -32,6 +32,13 @@ async function checkUrlGoogle(url, site) {
     return webCacheUrl;
 }
 
+function formatArticleText(text) {
+    text = text.replace(/href="\//g, 'href="https://web.archive.org/');
+    // possibly replace all http with https, not just images? -jt
+    text = text.replace(/src="http:\/\//g, 'src="https://');
+    return text;
+}
+
 async function nyt(url) {
     const rawHtml = await fetch(url);
     const html = await rawHtml.text();
@@ -73,7 +80,7 @@ async function economist(url) {
             articleText += `${html}<br /><br />`;
         }
     });
-    articleText = articleText.replace(/href="\//g, 'href="https://web.archive.org/');
+    articleText = formatArticleText(articleText);
     return { articleText, articleHeadline };
 }
 
