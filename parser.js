@@ -73,6 +73,7 @@ async function economist(url) {
             articleText += `${html}<br /><br />`;
         }
     });
+    articleText = articleText.replace(/href="\//g, 'href="https://web.archive.org/');
     return { articleText, articleHeadline };
 }
 
