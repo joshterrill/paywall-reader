@@ -197,6 +197,22 @@ async function forbes(url) {
     return { articleText, articleHeadline };
 }
 
+async function wired(url) {
+    const rawHtml = await fetch(url);
+    const html = await rawHtml.text();
+    const $ = cheerio.load(html);
+    const articleHeadline = $('title').first().text().replace(' | WIRED', '');
+    let articleText = '';
+    $('.body__inner-container').get().forEach(b => {
+        const html = $(b).html();
+        if (html) {
+            articleText += `${html}<br />`;
+        }
+    })
+
+    return { articleText, articleHeadline };
+}
+
 async function getContent(source, url, method) {
     console.log(source, url, method);
     let articleText = null;
@@ -266,6 +282,11 @@ async function getContent(source, url, method) {
             const forbesRes = await forbes(url);
             articleText = forbesRes.articleText;
             articleHeadline = forbesRes.articleHeadline;
+            break;
+        case 'wired.com':
+            const wiredRes = await wired(url);
+            articleText = wiredRes.articleText;
+            articleHeadline = wiredRes.articleHeadline;
             break;
         default:
             articleText = 'No article found';
