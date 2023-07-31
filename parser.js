@@ -202,14 +202,16 @@ async function wired(url) {
     const html = await rawHtml.text();
     const $ = cheerio.load(html);
     const articleHeadline = $('title').first().text().replace(' | WIRED', '');
+    $(".external-link").get().forEach(a => {
+        $(a).attr("href", $(a).attr("data-offer-url"));
+    });
     let articleText = '';
     $('.body__inner-container').get().forEach(b => {
         const html = $(b).html();
         if (html) {
             articleText += `${html}<br />`;
         }
-    })
-
+    });
     return { articleText, articleHeadline };
 }
 
