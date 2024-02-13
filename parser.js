@@ -133,11 +133,15 @@ async function businessInsider(url) {
     const $ = cheerio.load(html);
     const articleHeadline = $('title').first().text();
     $('.content-lock-content img.lazy-image').get().forEach(i => {
-        const image = $(i);
-        image.parent('.lazy-holder').removeAttr('style');
-        const imageJson = JSON.parse(image.attr('data-srcs'));
-        const rootUrl = Object.keys(imageJson)[0];
-        image.parent().html(`<img src="${decodeURIComponent(rootUrl)}" />`);
+        try {
+            const image = $(i);
+            image.parent('.lazy-holder').removeAttr('style');
+            const imageJson = JSON.parse(image.attr('data-srcs'));
+            const rootUrl = Object.keys(imageJson)[0];
+            image.parent().html(`<img src="${decodeURIComponent(rootUrl)}" />`);
+        } catch (error) {
+            // unable to parse image
+        }
     });
     $('.inline-newsletter-signup').remove();
     const articleHtml = $('.content-lock-content').html();
