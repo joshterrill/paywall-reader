@@ -28,21 +28,36 @@ async function checkUrlGoogle(url, site) {
         throw new Error('Unable to get result from search engine');
     }
     const { cacheId } = json.items[0];
-    const webCacheUrl = `http://webcache.googleusercontent.com/search?q=cache:${cacheId}:${site}`;
+    const webCacheUrl = `https://webcache.googleusercontent.com/search?q=cache:${cacheId}:${site}`;
     return webCacheUrl;
 }
 
-function formatArticleText(text) {
-    text = text.replace(/href="\//g, 'href="https://web.archive.org/');
-    // possibly replace all http with https, not just images? -jt
-    text = text.replace(/src="http:\/\//g, 'src="https://');
-    return text;
+function formatArticleText(text, protocol) {
+    try {
+        $ = cheerio.load(text);
+        // fix broken images due to mixed content error
+        $('img[src^="http://web.archive.org"], img[src^="https://web.archive.org"]').get().forEach(i => {
+            const src = $(i).attr('src');
+            if (src && src.includes('web.archive.org') && !src.startsWith(protocol)) {
+                $(i).attr('src', src.replace(/^https?:\/\/web.archive.org/, `${protocol}://web.archive.org`));
+            }
+        });
+        return text;
+    } catch (error) {
+        return text;
+    }
 }
 
 async function nyt(url) {
     const rawHtml = await fetch(url);
     const html = await rawHtml.text();
     const $ = cheerio.load(html);
+    $('noscript').get().forEach(n => {
+        if ($(n).html().includes('optimistic-truncator')) {
+            $(n).parent().remove();
+        }
+    });
+    $('[data-testid="imageblock-wrapper"] :not(picture)').remove();
     const articleHeadline = $('title').text().replace(' - The New York Times', '');
     const articleText = $('section[name="articleBody"]').html();
     return { articleText, articleHeadline };
@@ -80,7 +95,6 @@ async function economist(url) {
             articleText += `${html}<br /><br />`;
         }
     });
-    articleText = formatArticleText(articleText);
     return { articleText, articleHeadline };
 }
 
@@ -302,5 +316,6 @@ async function getContent(source, url, method) {
 }
 
 module.exports = {
+    formatArticleText,
     getContent,
 }
