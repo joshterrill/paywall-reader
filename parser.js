@@ -37,12 +37,13 @@ function formatArticleText(text, protocol) {
         $ = cheerio.load(text);
         // fix broken images due to mixed content error
         $('img[src^="http://web.archive.org"], img[src^="https://web.archive.org"]').get().forEach(i => {
+            $(i).removeAttr('srcset');
             const src = $(i).attr('src');
-            if (src && src.includes('web.archive.org') && !src.startsWith(protocol)) {
+            if (src && !src.startsWith(protocol)) {
                 $(i).attr('src', src.replace(/^https?:\/\/web.archive.org/, `${protocol}://web.archive.org`));
             }
         });
-        return text;
+        return $('*').html();
     } catch (error) {
         return text;
     }
