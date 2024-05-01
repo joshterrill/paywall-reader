@@ -68,8 +68,15 @@ async function nytCooking(url) {
     const rawHtml = await fetch(url);
     const html = await rawHtml.text();
     const $ = cheerio.load(html);
+    $('[class^="ingredients_buttons"]').remove();
+    $("img").removeAttr("style");
+    $('[class^="popover_popover"]').parent().remove();
+    $('[class^="buttondialog_dialog"]').parent().remove();
+    $('[class^="topnote_unexpanded"] button').remove();
     const articleHeadline = $('title').text().replace(' - NYT Cooking', '');
-    const articleText = $('.recipe-instructions').html();
+    const articleIntro = $('[class^="recipeintro"]').toArray().map(a => $(a).html()).join('<br />');
+    const articleBody = $('[class^="recipebody"]').toArray().map(a => $(a).html()).join('<br />');
+    const articleText = articleIntro + articleBody;
     return { articleText, articleHeadline };
 }
 
@@ -168,10 +175,33 @@ async function bloomberg(url) {
     const rawHtml = await fetch(url);
     const html = await rawHtml.text();
     const $ = cheerio.load(html);
-    const scriptTag = $('script[data-component-props="ArticleBody"]').text();
+    const scriptTag = $('#__NEXT_DATA__').text();
     const json = JSON.parse(scriptTag);
-    const articleText = json.story.body.replace(/60x-1/g, '1200x-1'); // replace low res images with higher res
-    const articleHeadline = json.story.seoHeadline;
+    const content = json.props.pageProps.story.body.content;
+    let articleText = '';
+    
+    content.forEach(item => {
+        if (item.type === 'paragraph') {
+            articleText += '<div>';
+            item.content.forEach(text => {
+                if (text.type === 'embed') {
+                    articleText += `<div>${text.iframeData.html}</div>`;
+                } else if (text.content && text.content.length) {
+                    text.content.forEach(t => {
+                        articleText += `<span>${t.value}</span>`;
+                    });
+                } else {
+                    articleText += `<span>${text.value}</span>`;
+                }
+            });
+            articleText += '</div><br />';
+        } else if (item.type === 'media' && item.subType === 'photo') {
+            const image = item.data.remoteContent[0].link.destination.web;
+            articleText += `<div><img src="${image}" alt="Image from the article"></div><br />`;
+        }
+    });
+    
+    const articleHeadline = json.props.pageProps.story.seoHeadline;
     return { articleText, articleHeadline };
 }
 

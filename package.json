@@ -1,7 +1,7 @@
 {
   "name": "paywall-reader",
   "description": "A web app that lets you read articles on popular news sites that get hidden behind paywalls.",
-  "version": "1.1.7",
+  "version": "1.2.0",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

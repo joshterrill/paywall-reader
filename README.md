@@ -17,6 +17,7 @@ URL: https://reader.dangerous.dev
 * Vogue (vogue.com)
 * The Atlantic (theatlantic.com)
 * Forbes (forbes.com)
+* Wired (wired.com)
 
 ### Prerequisites
 
