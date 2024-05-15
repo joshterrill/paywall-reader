@@ -35,6 +35,7 @@ a {
 .article-text-container img {
     width: -webkit-fill-available;
     max-width: 800px;
+    height: auto;
 }
 
 footer .container div:last-child {

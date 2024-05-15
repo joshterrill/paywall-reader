@@ -11,5 +11,6 @@
     "vogue.com": {"name": "Vogue", "method": "ARCHIVE"},
     "theatlantic.com": {"name": "The Atlantic", "method": "ARCHIVE"},
     "forbes.com": {"name": "Forbes", "method": "ARCHIVE"},
-    "wired.com": {"name": "Wired", "method": "ARCHIVE"}
+    "wired.com": {"name": "Wired", "method": "ARCHIVE"},
+    "scientificamerican.com": {"name": "Scientific American", "method": "ARCHIVE"}
 }

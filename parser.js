@@ -251,8 +251,8 @@ async function wired(url) {
     const html = await rawHtml.text();
     const $ = cheerio.load(html);
     const articleHeadline = $('title').first().text().replace(' | WIRED', '');
-    $(".external-link").get().forEach(a => {
-        $(a).attr("href", $(a).attr("data-offer-url"));
+    $('external-link').get().forEach(a => {
+        $(a).attr("href", $(a).attr('data-offer-url'));
     });
     let articleText = '';
     $('.body__inner-container').get().forEach(b => {
@@ -261,6 +261,15 @@ async function wired(url) {
             articleText += `${html}<br />`;
         }
     });
+    return { articleText, articleHeadline };
+}
+
+async function scientificAmerican(url) {
+    const rawHtml = await fetch(url);
+    const html = await rawHtml.text();
+    const $ = cheerio.load(html);
+    const articleHeadline = $('title').first().text().replace(' | Scientific American', '');
+    const articleText = $("[class^='article__content']").html();
     return { articleText, articleHeadline };
 }
 
@@ -338,6 +347,11 @@ async function getContent(source, url, method) {
             const wiredRes = await wired(url);
             articleText = wiredRes.articleText;
             articleHeadline = wiredRes.articleHeadline;
+            break;
+        case 'scientificamerican.com':
+            const scientificAmericanRes = await scientificAmerican(url);
+            articleText = scientificAmericanRes.articleText;
+            articleHeadline = scientificAmericanRes.articleHeadline;
             break;
         default:
             articleText = 'No article found';
