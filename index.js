@@ -40,7 +40,7 @@ app.get('/read', async (req, res) => {
         res.render('read', {source, sourceText: newsSourceMapping[source].name, articleText, articleHeadline});
     } catch (error) {
         console.log(error);
-        res.render('404');
+        res.render('article-not-found');
     }
     
 });
