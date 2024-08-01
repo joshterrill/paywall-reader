@@ -35,9 +35,20 @@ app.get('/read', async (req, res) => {
             throw new Error('Source or URL not provided');
         }
         const sourceMapping = newsSourceMapping[source];
-        let { articleText, articleHeadline } = await parse.getContent(source, url, sourceMapping.method);
-        articleText = parse.formatArticleText(articleText, req.headers['x-forwarded-proto'] || req.protocol);
-        res.render('read', {source, sourceText: newsSourceMapping[source].name, articleText, articleHeadline});
+        let foundArticle = false;
+        for (let method of sourceMapping.method) {
+            try {
+                let { articleText, articleHeadline } = await parse.getContent(source, url, method);
+                articleText = parse.formatArticleText(articleText, req.headers['x-forwarded-proto'] || req.protocol);
+                foundArticle = true;
+                res.render('read', {source, sourceText: newsSourceMapping[source].name, articleText, articleHeadline});
+            } catch (error) {
+                // try the next one
+            }
+        }
+        if (!foundArticle) {
+            throw new Error('No article found');
+        }
     } catch (error) {
         console.log(error);
         res.render('article-not-found');
