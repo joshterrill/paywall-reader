@@ -57,8 +57,8 @@ app.get('/read', async (req, res) => {
                 res.render('read', {source, sourceText: newsSourceMapping[source].name, articleText, articleHeadline});
             } catch (error) {
                 // nasty hack to see if the error is due to a trailing slash
-                if (error && url.endsWith('/')) {
-                    url = url.slice(0, -1);
+                if (error && !url.endsWith('/')) {
+                    url = `${url}/`;
                     let { articleText, articleHeadline } = await parse.getContent(source, url, method);
                     articleText = parse.formatArticleText(articleText, req.headers['x-forwarded-proto'] || req.protocol);
                     foundArticle = true;
