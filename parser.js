@@ -154,7 +154,8 @@ async function businessInsider(url) {
     const html = await rawHtml.text();
     const $ = cheerio.load(html);
     const articleHeadline = $('title').first().text();
-    $('.content-lock-content img.lazy-image').get().forEach(i => {
+    $('.related-posts').remove();
+    $('.post-story-body-content img.lazy-image').get().forEach(i => {
         try {
             const image = $(i);
             image.parent('.lazy-holder').removeAttr('style');
@@ -166,7 +167,7 @@ async function businessInsider(url) {
         }
     });
     $('.inline-newsletter-signup').remove();
-    const articleHtml = $('.content-lock-content').html();
+    const articleHtml = $('.post-story-body-content').html();
     const articleText = articleHtml;
     return { articleText, articleHeadline };
 }
