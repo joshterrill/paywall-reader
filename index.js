@@ -8,7 +8,7 @@ const newsSourceMapping = require('./news-source-map.json');
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(`${__dirname}/public`));
 
 app.engine('handlebars', engine({
@@ -38,7 +38,7 @@ app.get('/article', (req, res) => {
     if (!sourceText || !sourceText.name) {
         res.render('404');
     }
-    res.render('article', {source, sourceText: sourceText.name});
+    res.render('article', { source, sourceText: sourceText.name });
 });
 
 app.get('/read', async (req, res) => {
@@ -47,34 +47,55 @@ app.get('/read', async (req, res) => {
         if (!source || !url) {
             throw new Error('Source or URL not provided');
         }
+
         const sourceMapping = newsSourceMapping[source];
-        let foundArticle = false;
+        if (!sourceMapping) {
+            throw new Error(`Unknown source: ${source}`);
+        }
+
+        const renderArticle = (articleText, articleHeadline) => {
+            const formattedText = parse.formatArticleText(
+                articleText,
+                req.headers['x-forwarded-proto'] || req.protocol
+            );
+            res.render('read', {
+                source,
+                sourceText: sourceMapping.name,
+                articleText: formattedText,
+                articleHeadline
+            });
+        };
+
+        const tryParseArticle = async (url, method) => {
+            const { articleText, articleHeadline } = await parse.getContent(source, url, method);
+            renderArticle(articleText, articleHeadline);
+            return true;
+        };
+
         for (let method of sourceMapping.method) {
             try {
-                let { articleText, articleHeadline } = await parse.getContent(source, url, method);
-                articleText = parse.formatArticleText(articleText, req.headers['x-forwarded-proto'] || req.protocol);
-                foundArticle = true;
-                res.render('read', {source, sourceText: newsSourceMapping[source].name, articleText, articleHeadline});
+                console.log(`Trying method: ${method}`);
+                if (await tryParseArticle(url, method)) return;
             } catch (error) {
-                // nasty hack to see if the error is due to a trailing slash
+                // retry with trailing slash if missing
                 if (error && !url.endsWith('/')) {
-                    url = `${url}/`;
-                    let { articleText, articleHeadline } = await parse.getContent(source, url, method);
-                    articleText = parse.formatArticleText(articleText, req.headers['x-forwarded-proto'] || req.protocol);
-                    foundArticle = true;
-                    res.render('read', {source, sourceText: newsSourceMapping[source].name, articleText, articleHeadline});
+                    try {
+                        const urlWithSlash = `${url}/`;
+                        if (await tryParseArticle(urlWithSlash, method)) return;
+                    } catch (error2) {
+                        console.log('Error parsing article with trailing slash:', error2);
+                    }
+                } else {
+                    console.log('Error parsing article:', error);
                 }
-                console.log('Error parsing article:', error);
             }
         }
-        if (!foundArticle) {
-            throw new Error('No article found');
-        }
+
+        throw new Error('No article found');
     } catch (error) {
-        console.log(error);
+        console.error('Read route error:', error.message);
         res.render('article-not-found');
     }
-    
 });
 
 app.get('/*', (req, res) => {

@@ -1,5 +1,5 @@
 ﻿{
-    "nytimes.com": {"name": "New York Times", "method": ["ARCHIVE"]},
+    "nytimes.com": {"name": "New York Times", "method": ["ARCHIVE", "GOOGLE"]},
     "cooking.nytimes.com": {"name": "New York Times Cooking", "method": ["ARCHIVE"]},
     "newyorker.com": {"name": "The New Yorker", "method": ["GOOGLE"]},
     "economist.com": {"name": "The Economist", "method": ["ARCHIVE"]},
