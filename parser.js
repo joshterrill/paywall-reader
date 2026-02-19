@@ -97,7 +97,7 @@ async function economist(url) {
     const $ = cheerio.load(html);
     const articleHeadline = $('article h1').text();
     let articleText = '';
-    $('[class^="article__body-"]').get().map(a => {
+    $('article#new-article-template p').get().map(a => {
         const html = $(a).html();
         if (html) {
             articleText += `${html}<br /><br />`;
@@ -113,9 +113,9 @@ async function washingtonPost(url) {
     $('[data-qa="article-body-ad"]').remove();
     $('[data-qa="subscribe-promo"]').remove();
     $('.hide-for-print').remove();
-    const articleHeadline = $('span[data-qa="headline-text"]').text();
+    const articleHeadline = $('title').text().replace(' - The Washington Post', '');
     let articleText = '';
-    $('[data-qa="article-body"]').get().map(a => {
+    $('.grid-body p').get().map(a => {
         const html = $(a).html();
         if (html) {
             articleText += html;
@@ -274,6 +274,15 @@ async function scientificAmerican(url) {
     return { articleText, articleHeadline };
 }
 
+async function fortune(url) {
+    const rawHtml = await fetch(url);
+    const html = await rawHtml.text();
+    const $ = cheerio.load(html);
+    const articleHeadline = $('title').first().text().replace(' | Fortune', '');
+    const articleText = $(".article-content").html();
+    return { articleText, articleHeadline };
+}
+
 async function getContent(source, url, method) {
     console.log(source, url, method);
     let articleText = null;
@@ -353,6 +362,11 @@ async function getContent(source, url, method) {
             const scientificAmericanRes = await scientificAmerican(url);
             articleText = scientificAmericanRes.articleText;
             articleHeadline = scientificAmericanRes.articleHeadline;
+            break;
+        case 'fortune.com':
+            const fortuneRes = await fortune(url);
+            articleText = fortuneRes.articleText;
+            articleHeadline = fortuneRes.articleHeadline;
             break;
         default:
             articleText = 'No article found';

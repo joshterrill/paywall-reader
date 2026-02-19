@@ -7,6 +7,17 @@ const newsSourceMapping = require('./news-source-map.json');
 
 const app = express();
 const port = process.env.PORT || 3000;
+const sourceCardColors = [
+    'bg-primary',
+    'bg-success',
+    'bg-info',
+    'bg-danger',
+    'bg-warning',
+    'bg-secondary',
+    'bg-dark',
+    'bg-light'
+];
+const darkTextBackgrounds = new Set(['bg-warning', 'bg-light']);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(`${__dirname}/public`));
@@ -29,7 +40,17 @@ app.set('view engine', 'handlebars');
 app.set('views', './views');
 
 app.get('/', (req, res) => {
-    res.render('home');
+    const sources = Object.entries(newsSourceMapping).map(([domain, source], index) => {
+        const backgroundClass = sourceCardColors[index % sourceCardColors.length];
+        const textClass = darkTextBackgrounds.has(backgroundClass) ? 'text-dark' : 'text-white';
+        return {
+            domain,
+            name: source.name,
+            backgroundClass,
+            textClass
+        };
+    });
+    res.render('home', { sources });
 });
 
 app.get('/article', (req, res) => {
