@@ -283,6 +283,15 @@ async function fortune(url) {
     return { articleText, articleHeadline };
 }
 
+async function bbc(url) {
+    const rawHtml = await fetch(url);
+    const html = await rawHtml.text();
+    const $ = cheerio.load(html);
+    const articleHeadline = $('title').first().text().replace(' - BBC News', '');
+    const articleText = $("[data-block='text']").html();
+    return { articleText, articleHeadline };
+}
+
 async function getContent(source, url, method) {
     console.log(source, url, method);
     let articleText = null;
@@ -367,6 +376,11 @@ async function getContent(source, url, method) {
             const fortuneRes = await fortune(url);
             articleText = fortuneRes.articleText;
             articleHeadline = fortuneRes.articleHeadline;
+            break;
+        case 'bbc.co.uk':
+            const bbcRes = await bbc(url);
+            articleText = bbcRes.articleText;
+            articleHeadline = bbcRes.articleHeadline;
             break;
         default:
             articleText = 'No article found';

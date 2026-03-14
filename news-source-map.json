@@ -13,5 +13,6 @@
     "forbes.com": {"name": "Forbes", "method": ["ARCHIVE"]},
     "wired.com": {"name": "Wired", "method": ["ARCHIVE"]},
     "scientificamerican.com": {"name": "Scientific American", "method": ["ARCHIVE"]},
-    "fortune.com": {"name": "Fortune", "method": ["ARCHIVE"]}
+    "fortune.com": {"name": "Fortune", "method": ["ARCHIVE"]},
+    "bbc.co.uk": {"name": "BBC", "method": ["ARCHIVE"]}
 }
